@@ -555,7 +555,11 @@ ngx_http_redis_filter(void *data, ssize_t bytes)
     u = ctx->request->upstream;
     b = &u->buffer;
 
+#if defined nginx_version && nginx_version < 1001004
     if (u->length == ctx->rest) {
+#else
+    if (u->length == (ssize_t) ctx->rest) {
+#endif
 
         if (ngx_strncmp(b->last,
                    ngx_http_redis_end + NGX_HTTP_REDIS_END - ctx->rest,
